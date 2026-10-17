@@ -28,7 +28,7 @@ Recommended jobs are a dated shortlist, not guaranteed openings. Confirm availab
 
 ## Firestore rules
 
-Merge `firestore.rules.fragment` inside the existing `match /databases/{database}/documents` block and publish it without replacing existing rules. It permits only the authorized verified Google account to use the single IncomeGen workspace document.
+`firestore.rules` contains the complete shared-project ruleset supplied by the owner, plus the isolated IncomeGen rule. The IncomeGen block permits only the authorized verified Google account to read or update `incomegen/workspace`; listing and deletion are denied. Existing Food Tracking, Stenotype, Theodore, and Solar rules are preserved.
 
 ## Local preview
 

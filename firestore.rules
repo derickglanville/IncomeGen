@@ -1,0 +1,103 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /food_tracker_meals/{document=**} {
+      allow read, write: if request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'dglanville@gmail.com';
+    }
+
+    match /food_tracker_health/{document=**} {
+      allow read, write: if request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'dglanville@gmail.com';
+    }
+
+    match /food_tracker_wellness/{document=**} {
+      allow read, write: if request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'dglanville@gmail.com';
+    }
+
+    match /stenotype_users/{uid}/sessions/{sessionId} {
+      allow read, delete: if request.auth != null
+        && request.auth.uid == uid
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'dglanville@gmail.com';
+
+      allow create, update: if request.auth != null
+        && request.auth.uid == uid
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == 'dglanville@gmail.com'
+        && request.resource.data.keys().hasOnly(['payload', 'updated'])
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() < 900000
+        && request.resource.data.updated is string;
+    }
+
+    match /theo_job_search/{documentId} {
+      function theoMember() {
+        return request.auth != null
+          && request.auth.token.email_verified == true
+          && request.auth.token.email in [
+            'dglanville@gmail.com',
+            'theoglanville@gmail.com'
+          ];
+      }
+
+      allow get: if documentId == 'workspace'
+        && theoMember();
+
+      allow create, update: if documentId == 'workspace'
+        && theoMember()
+        && request.resource.data.keys().hasOnly(['payload', 'schema'])
+        && request.resource.data.schema == 1
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() < 800000;
+
+      allow list, delete: if false;
+    }
+
+    match /incomegen/{documentId} {
+      function incomeGenOwner() {
+        return request.auth != null
+          && request.auth.token.email_verified == true
+          && request.auth.token.email == 'dglanville@gmail.com';
+      }
+
+      allow get: if documentId == 'workspace'
+        && incomeGenOwner();
+
+      allow create, update: if documentId == 'workspace'
+        && incomeGenOwner()
+        && request.resource.data.keys().hasOnly(['payload', 'schema'])
+        && request.resource.data.schema == 1
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() < 800000;
+
+      allow list, delete: if false;
+    }
+
+    match /solar_daily_entries/{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+    }
+
+    match /solar_tracker_config/{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+    }
+
+    match /tracker_refresh_signals/{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+    }
+
+    match /tracker_state/{document=**} {
+      allow read, write: if request.time < timestamp.date(2026, 12, 31);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
