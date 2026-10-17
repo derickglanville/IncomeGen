@@ -9,8 +9,13 @@ const css=fs.readFileSync(new URL('../docs/style.css',import.meta.url),'utf8');
 assert.match(html,/Continue with Google/);
 assert.match(html,/viewport-fit=cover/);
 assert.match(html,/<style>\[hidden\]\{display:none!important\}<\/style>/);
-assert.match(html,/style\.css\?v=4/);
-assert.match(html,/app\.js\?v=4/);
+assert.match(html,/style\.css\?v=5/);
+assert.match(html,/app\.js\?v=5/);
+assert.match(html,/id="ideas"/);
+assert.match(html,/AI Business Lab/);
+assert.match(js,/businessIdeas/);
+assert.match(js,/Solar performance audit service/);
+assert.match(js,/Public resource allocation micro-consulting/);
 assert.match(js,/incomegen\/workspace/);
 assert.match(js,/dglanville@gmail\.com/);
 // Role entries plus one platform-registry entry for each provider.
