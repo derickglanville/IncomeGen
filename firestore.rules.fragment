@@ -1,0 +1,16 @@
+// Add inside the existing match /databases/{database}/documents block.
+// Preserve all existing Solar, Gather, and Theodore rule blocks.
+match /incomegen/{documentId} {
+  function incomeGenOwner() {
+    return request.auth != null
+      && request.auth.token.email_verified == true
+      && request.auth.token.email == 'dglanville@gmail.com';
+  }
+  allow get: if documentId == 'workspace' && incomeGenOwner();
+  allow create, update: if documentId == 'workspace' && incomeGenOwner()
+    && request.resource.data.keys().hasOnly(['payload', 'schema'])
+    && request.resource.data.schema == 1
+    && request.resource.data.payload is string
+    && request.resource.data.payload.size() < 800000;
+  allow list, delete: if false;
+}
