@@ -21,6 +21,39 @@ service cloud.firestore {
         && request.auth.token.email == 'dglanville@gmail.com';
     }
 
+    match /pnp_research_notes/{noteId} {
+      function researchOwner() {
+        return request.auth != null
+          && request.auth.token.email_verified == true
+          && request.auth.token.email == 'dglanville@gmail.com';
+      }
+
+      function validResearchNote() {
+        let note = request.resource.data;
+        return note.keys().hasOnly([
+            'date', 'title', 'body', 'created', 'updated'
+          ])
+          && note.keys().hasAll([
+            'date', 'title', 'body', 'created', 'updated'
+          ])
+          && note.date is string
+          && note.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && note.title is string
+          && note.title.size() > 0
+          && note.title.size() <= 200
+          && note.body is string
+          && note.body.size() > 0
+          && note.body.size() <= 20000
+          && note.created is string
+          && note.updated is string;
+      }
+
+      allow read, delete: if researchOwner();
+
+      allow create, update: if researchOwner()
+        && validResearchNote();
+    }
+
     match /stenotype_users/{uid}/sessions/{sessionId} {
       allow read, delete: if request.auth != null
         && request.auth.uid == uid

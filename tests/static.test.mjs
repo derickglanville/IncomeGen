@@ -34,7 +34,7 @@ assert.equal((js.match(/\['Outlier'/g)||[]).length,7);
 assert.equal(manifest.display,'standalone');
 assert.doesNotMatch(js,/sqlite/i);
 assert.match(css,/\[hidden\]\{display:none!important\}/);
-for(const collection of ['food_tracker_meals','food_tracker_health','food_tracker_wellness','stenotype_users','theo_job_search','incomegen','solar_daily_entries','solar_tracker_config','tracker_refresh_signals','tracker_state'])assert.match(rules,new RegExp('match /'+collection.replace('/','\\/')));
+for(const collection of ['food_tracker_meals','food_tracker_health','food_tracker_wellness','pnp_research_notes','stenotype_users','theo_job_search','incomegen','solar_daily_entries','solar_tracker_config','tracker_refresh_signals','tracker_state'])assert.match(rules,new RegExp('match /'+collection.replace('/','\\/')));
 assert.match(rules,/match \/incomegen\/\{documentId\}/);
 assert.match(rules,/request\.auth\.token\.email == 'dglanville@gmail\.com'/);
 assert.match(rules,/request\.auth\.token\.email == 'patrick\.glanville@gmail\.com'/);
