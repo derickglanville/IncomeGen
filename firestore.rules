@@ -61,17 +61,34 @@ service cloud.firestore {
     }
 
     match /incomegen/{documentId} {
-      function incomeGenOwner() {
+      function incomeGenMember() {
         return request.auth != null
           && request.auth.token.email_verified == true
+          && request.auth.token.email in [
+            'dglanville@gmail.com',
+            'patrick.glanville@gmail.com'
+          ];
+      }
+
+      function incomeGenAdmin() {
+        return incomeGenMember()
           && request.auth.token.email == 'dglanville@gmail.com';
       }
 
-      allow get: if documentId == 'workspace'
-        && incomeGenOwner();
+      function ownsIncomeGenDocument() {
+        return (documentId == 'derick'
+            && request.auth.token.email == 'dglanville@gmail.com')
+          || (documentId == 'patrick'
+            && request.auth.token.email == 'patrick.glanville@gmail.com');
+      }
 
-      allow create, update: if documentId == 'workspace'
-        && incomeGenOwner()
+      allow get: if incomeGenMember()
+        && (ownsIncomeGenDocument()
+          || (incomeGenAdmin()
+            && documentId in ['derick', 'patrick', 'workspace']));
+
+      allow create, update: if incomeGenMember()
+        && ownsIncomeGenDocument()
         && request.resource.data.keys().hasOnly(['payload', 'schema'])
         && request.resource.data.schema == 1
         && request.resource.data.payload is string
