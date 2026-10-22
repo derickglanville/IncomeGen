@@ -10,7 +10,7 @@ assert.match(html,/Continue with Google/);
 assert.match(html,/viewport-fit=cover/);
 assert.match(html,/<style>\[hidden\]\{display:none!important\}<\/style>/);
 assert.match(html,/style\.css\?v=9/);
-assert.match(html,/app\.js\?v=9/);
+assert.match(html,/app\.js\?v=10/);
 assert.doesNotMatch(js,/setPersistence/);
 assert.doesNotMatch(js,/mobile.*signInWithRedirect/);
 assert.match(html,/id="ideas"/);
@@ -26,6 +26,7 @@ assert.match(js,/documents\/incomegen\//);
 assert.match(js,/dglanville@gmail\.com/);
 assert.match(js,/patrick\.glanville@gmail\.com/);
 assert.match(js,/readOnlyAdminView/);
+assert.match(js,/switcher\?\.remove\(\)/);
 assert.match(js,/documentId=activeAccount/);
 assert.match(html,/id="account-select"/);
 // Role entries plus one platform-registry entry for each provider.
